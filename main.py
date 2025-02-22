@@ -23,13 +23,15 @@ def get_player_username(uuid):
     """
     Retrieve the Minecraft username associated with a given UUID.
     """
-    url = f"https://sessionserver.mojang.com/session/minecraft/profile/{uuid}"
+    url = f"https://api.minecraftservices.com/minecraft/profile/lookup/{uuid}"
     response = requests.get(url)
-
+    data = response.json()
     if response.status_code == 200:
-        data = response.json()
+        # data = response.json()
         return data['name']  # Correct key for the username
     else:
+        print(data)
+        print(f"error code {response.status_code}")
         print(f"No response for UUID {uuid}")
         return None
     
@@ -55,7 +57,7 @@ def list_folder(folder_path):
     """
     make a list of every 
     """
-    print("salam " , folder_path)
+
     valid_files = []
     try:
         files = os.listdir(folder_path)
@@ -64,7 +66,7 @@ def list_folder(folder_path):
     else:
         for i in files:
             if ".dat_old" not in i and ".dat" in i:
-                valid_files.append(i[:35])
+                valid_files.append(i[:36])
         return valid_files or None
 
 
@@ -73,6 +75,7 @@ def replace_uuids_by_usernames(uuids):
     user_list = []
     for i in uuids:
         user_list.append(get_player_username(i))
+    
     return user_list
 
 
@@ -82,8 +85,7 @@ def choice(list):
         print(f"{a} --> {i}")
         a +=1
     
-    valid = True
-    while valid:
+    while True:
         user_choice = input("wich of these users would you want to get the data from? --> ")
         try:
             user_choice_int = int(user_choice)
@@ -91,8 +93,8 @@ def choice(list):
             print("You have not entered an integer, please enter a number you see on the list above.")
         else:
             if 0 <= user_choice_int <= len(list) -1:
-                valid = False
                 print(f"you have selected {list[user_choice_int]}.")
+                break
             else:
                 print("Please enter a number you see on the list above.")
     return user_choice_int
@@ -141,10 +143,12 @@ def main():
             valid_files = list_folder(folder)
             empty = not valid_files
            
+   
     username_list = replace_uuids_by_usernames(valid_files)
+    
     again = True
     while again:
-        index_old_user = choice(username_list) -1 
+        index_old_user = choice(username_list)
         new_user_uuid,new_user_username = replace_username_by_uuid()
         copy_data(valid_files[index_old_user],new_user_uuid,folder)
         print(f"the user [{new_user_username}] now has a copy of the playerdata from [{username_list[index_old_user]}]")
@@ -154,4 +158,5 @@ def main():
 
 
 #launch program
-main()
+if __name__ == "__main__":
+    main()
