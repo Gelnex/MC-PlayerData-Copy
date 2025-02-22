@@ -1,4 +1,10 @@
-# MC-PlayerData-Copy
- MC-PlayerData-Copy is simple tool to switch the uuid of a player data file. Usefull for switching all data from an account to another without hassle.
+# MC-PlayerData-Copy  
 
- It's currently a work in progress, dont expect a flawless version for now. It might work but double-check results
+MC-PlayerData-Copy is a simple tool for switching the UUID of a player data file. This is useful for transferring all data from one account to another without hassle.  
+
+The program requires the `requests` module to send requests to the Mojang API.  
+
+To install the module, open a command line and enter:  
+
+```bash
+pip install requests
